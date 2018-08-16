@@ -8,6 +8,7 @@ use common\models\BookSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * BookController implements the CRUD actions for Book model.
@@ -23,7 +24,7 @@ class BookController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    // 'delete' => ['POST'],
                 ],
             ],
         ];
@@ -33,15 +34,26 @@ class BookController extends Controller
      * Lists all Book models.
      * @return mixed
      */
-    public function actionIndex()
+  
+    protected function renderList()
     {
         $searchModel = new BookSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        $dataProvider->sort->route = Url::toRoute(['index']);
+
+        $method = Yii::$app->request->isAjax ? 'renderAjax' : 'render';
+
+        return $this->$method('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+
+    public function actionIndex()
+    {
+        return $this->renderList();
     }
 
     /**
@@ -87,7 +99,11 @@ class BookController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if(Yii::$app->request->isPjax){
+                return $this->render('update', ['model' => $model]);
+            } else {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
@@ -106,7 +122,11 @@ class BookController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        if(Yii::$app->request->isAjax){
+            return $this->renderList();
+        } else {
+            return $this->redirect(['index']);
+        }
     }
 
     /**

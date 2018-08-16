@@ -6,5 +6,5 @@ use yii\rest\ActiveController;
 
 class ApiController extends ActiveController
 {
-    public $modelClass = 'common\models\Book';
+  public $modelClass = 'common\models\Book';
 }
