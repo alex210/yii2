@@ -7,9 +7,9 @@ use yii\filters\Cors;
 
 class ApiController extends ActiveController
 {
-	public $enableCsrfValidation = false;
+#	public $enableCsrfValidation = false;
   public $modelClass = 'common\models\Book';
-      public function actions()
+/*      public function actions()
     {
         return [
             'options' => [
@@ -51,5 +51,5 @@ class ApiController extends ActiveController
         ];
 
         return $behaviors;
-    }
+    }*/
 }
