@@ -29,6 +29,7 @@ class Book extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['title', 'author', 'heading', 'size'], 'required'],
             [['size'], 'integer'],
             [['title', 'author', 'heading'], 'string', 'max' => 255],
         ];

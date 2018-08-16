@@ -2,15 +2,22 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Book */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+
+<?php Pjax::begin(); ?>
 <div class="book-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+    	'options' => [
+    		'data-pjax' => true,
+    	]
+    ]); ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
@@ -27,3 +34,5 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php Pjax::end(); ?>
