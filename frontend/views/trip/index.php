@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use common\models\Trip;
+use common\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TripSearch */
@@ -10,7 +12,30 @@ use yii\bootstrap\Modal;
 
 $this->title = 'Поездки';
 $this->params['breadcrumbs'][] = $this->title;
+
+$id1 = User::find()->where(['name' => 'Александр Николаевич'])->one()['id'];
+$id2 = User::find()->where(['name' => 'Дмитрий Иванович'])->one()['id'];
+
+$count1 = Trip::find()->where(['driver' => $id1])->count();
+$count2 = Trip::find()->where(['driver' => $id2])->count();
+
+
+if($count1 > $count2){
+    $id = $id2;
+} elseif ($count1 < $count2) {
+    $id = $id1;
+} elseif ($count1 == $count2) {
+    $id0 = Trip::find()->orderBy(['date' => SORT_DESC])->one()['driver'];
+    if($id0 == $id1){
+        $id = $id2;
+    } elseif($id0 == $id2) {
+        $id = $id1;
+    }
+}
+
+$driver = User::find()->where(['id' => $id])->one()['name'];
 ?>
+<p>Следующая поездка у водителя: <span class="text-danger"><?=$driver?></span></p>
 <div class="trip-index">
 
     <?= GridView::widget([
